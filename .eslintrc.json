@@ -1,0 +1,49 @@
+{
+  "env": {
+    "node": true,
+    "browser": true,
+    "es2020": true,
+    "jest": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "airbnb-base",
+    "plugin:jest/recommended",
+    "plugin:json/recommended",
+    "plugin:prettier/recommended",
+    "prettier"
+  ],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaFeatures": {},
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "parser": "babel-eslint",
+  "plugins": ["import", "prettier", "json", "jest"],
+  "rules": {
+    "import/extensions": ["warn", "never", { "mjs": "always" }],
+    "prettier/prettier": ["warn"],
+    "semi": ["warn", "never"],
+    "func-names": ["warn", "as-needed"],
+    "lines-between-class-members": ["warn", "always", { "exceptAfterSingleLine": true }],
+    "require-jsdoc": [
+      "warn",
+      {
+        "require": {
+          "FunctionDeclaration": false,
+          "MethodDefinition": false,
+          "ClassDeclaration": true,
+          "ArrowFunctionExpression": false,
+          "FunctionExpression": false
+        }
+      }
+    ],
+    "max-len": ["warn", { "code": 120 }],
+    "new-cap": ["warn", { "capIsNew": false }],
+    "no-multi-spaces": ["warn", { "ignoreEOLComments": true }]
+  }
+}

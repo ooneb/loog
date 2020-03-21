@@ -1,0 +1,36 @@
+{
+  "name": "loog",
+  "version": "0.0.1",
+  "description": "Simple logger",
+  "main": "index.mjs",
+  "module": "index.mjs",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "log",
+    "logger",
+    "console"
+  ],
+  "author": "D.G. Molly",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-private-methods": "^7.8.3",
+    "@babel/preset-env": "^7.9.0",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^25.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jest": "^23.8.2",
+    "eslint-plugin-json": "^2.1.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "jest": "^25.1.0",
+    "prettier": "^1.19.1"
+  }
+}
