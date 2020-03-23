@@ -2,9 +2,14 @@
   "name": "loog",
   "version": "0.0.1",
   "description": "Simple logger",
-  "main": "index.mjs",
-  "module": "index.mjs",
+  "main": "src/loog.mjs",
+  "module": "src/loog.mjs",
+  "browser": "dist/loog.js",
   "scripts": {
+    "build": "rimraf dist/* && webpack --mode development",
+    "build:prod": "rimraf dist/* && webpack --mode production",
+    "show:term": "node __tests__/showcase.mjs",
+    "show:browser": "yarn build && start __tests__/showcase.html",
     "test": "jest"
   },
   "keywords": [
@@ -14,7 +19,9 @@
   ],
   "author": "D.G. Molly",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "ansi-styles": "^4.2.1"
+  },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
@@ -23,6 +30,7 @@
     "@babel/preset-env": "^7.9.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^25.1.0",
+    "babel-loader": "^8.1.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-config-prettier": "^6.10.0",
@@ -31,6 +39,9 @@
     "eslint-plugin-json": "^2.1.1",
     "eslint-plugin-prettier": "^3.1.2",
     "jest": "^25.1.0",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "rimraf": "^3.0.2",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11"
   }
 }

@@ -1,6 +1,6 @@
-import Loog from '../index.mjs'
+import Loog from '../src/loog.mjs'
 
-const logSpy = jest.spyOn(console, 'log').mockImplementation((_tpl, _style, msg) => {
+const logSpy = jest.spyOn(console, 'log').mockImplementation((_tpl, msg) => {
   return msg
 })
 
@@ -128,7 +128,7 @@ describe('Loog', () => {
 
     test(`setLevelAll(level) should disable logging below "level" for all loggers
             created before or after the call to enable()`, () => {
-      const warnSpy = jest.spyOn(console, 'warn').mockImplementation((_tpl, _style, msg) => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation((_tpl, msg) => {
         return msg
       })
 
@@ -200,11 +200,11 @@ describe('Loog', () => {
     })
 
     test('setLevel(level) should disable logging below "level"', () => {
-      const warnSpy = jest.spyOn(console, 'warn').mockImplementation((_tpl, _style, msg) => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation((_tpl, msg) => {
         return msg
       })
 
-      const errorSpy = jest.spyOn(console, 'error').mockImplementation((_tpl, _style, msg) => {
+      const errorSpy = jest.spyOn(console, 'error').mockImplementation((_tpl, msg) => {
         return msg
       })
 

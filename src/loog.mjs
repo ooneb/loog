@@ -1,13 +1,22 @@
 /* eslint-disable no-console */
+import style from 'ansi-styles'
+
+/**
+ * Detect Electron renderer / nwjs process, which is node, but we should
+ * treat as a browser.
+ */
+const browser =
+  // eslint-disable-next-line no-underscore-dangle
+  typeof process === 'undefined' || process.type === 'renderer' || process.browser === true || process.__nwjs
 
 // TODO: add trace level?
 // TODO: auto display objects as JSON / %o template / console.dir method
 const METHODS = {
-  debug: { level: 1, style: 'color: magenta' },
-  log: { level: 2, style: 'color: black' },
-  info: { level: 3, style: 'color: blue' },
-  warn: { level: 4, style: 'color: yellow' },
-  error: { level: 5, style: 'color: red' },
+  debug: { level: 1, color: 'magenta' },
+  log: { level: 2, color: 'black' },
+  info: { level: 3, color: 'blue' },
+  warn: { level: 4, color: 'yellow' },
+  error: { level: 5, color: 'red' },
 }
 
 const LEVELS = {
@@ -24,15 +33,21 @@ const ENABLED = process.env.NODE_ENV === 'development'
 
 const noop = function() {}
 
-function setLoggingMethods(logger, prefix, enabled = true, level = DEFAULT_LEVEL) {
+function setLoggingMethods(logger, prefix, enabled = true, minLevel = DEFAULT_LEVEL) {
   Object.keys(METHODS).forEach((m) => {
+    const { level, color } = METHODS[m]
     const methodToBind = console[m] ? m : 'log'
-    const newMethod =
-      enabled && level <= METHODS[m].level
-        ? console[methodToBind].bind(console, `%c${prefix}%o`, METHODS[m].style)
-        : noop
+    const args = browser
+      ? [`%c${prefix}%O`, `color: ${color}`]
+      : [`${style[color].open}${prefix}%O${style[color].close}`]
+
     // eslint-disable-next-line no-param-reassign
-    logger[m] = newMethod
+    logger[m] = enabled && minLevel <= level ? console[methodToBind].bind(console, ...args) : noop
+    // const f = enabled && minLevel <= level ? console[methodToBind].bind(console, ...args) : noop
+    // eslint-disable-next-line no-param-reassign
+    // logger[m] = (msg) => {
+    //   f.call(console, msg)
+    // }
   })
 }
 
