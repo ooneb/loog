@@ -43,11 +43,6 @@ function setLoggingMethods(logger, prefix, enabled = true, minLevel = DEFAULT_LE
 
     // eslint-disable-next-line no-param-reassign
     logger[m] = enabled && minLevel <= level ? console[methodToBind].bind(console, ...args) : noop
-    // const f = enabled && minLevel <= level ? console[methodToBind].bind(console, ...args) : noop
-    // eslint-disable-next-line no-param-reassign
-    // logger[m] = (msg) => {
-    //   f.call(console, msg)
-    // }
   })
 }
 
