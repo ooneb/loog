@@ -12,8 +12,9 @@ module.exports = {
     path: BUILD_DIR,
     filename: BUILD_FILE,
     library: 'Loog',
+    libraryExport: 'default',
     libraryTarget: 'window',
-    umdNamedDefine: true,
+    // umdNamedDefine: true,
   },
 
   devtool: 'eval-source-map',
