@@ -1,9 +1,18 @@
 {
-  "name": "loog",
+  "name": "@dongwak/loog",
   "description": "Simple logger",
   "version": "0.0.1",
   "author": "D.G. Molly",
   "license": "ISC",
+  "repository": "git://github.com/dongwak/loog.git",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "keywords": [
+    "log",
+    "logger",
+    "console"
+  ],
   "main": "src/loog.mjs",
   "module": "src/loog.mjs",
   "scripts": {
@@ -14,11 +23,6 @@
     "clean": "rimraf dist/*",
     "test": "jest"
   },
-  "keywords": [
-    "log",
-    "logger",
-    "console"
-  ],
   "dependencies": {
     "ansi-styles": "^4.2.1"
   },
