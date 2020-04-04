@@ -5,19 +5,11 @@ import style from 'ansi-styles'
  * Detect Electron renderer / nwjs process, which is node, but we should
  * treat as a browser.
  */
-const browser =
-  // eslint-disable-next-line no-underscore-dangle
-  typeof process === 'undefined' || process.type === 'renderer' || process.browser === true || process.__nwjs
-
-// TODO: add trace level?
-// TODO: auto display objects as JSON / %o template / console.dir method
-const METHODS = {
-  debug: { level: 1, color: 'magenta' },
-  log: { level: 2, color: 'black' },
-  info: { level: 3, color: 'blue' },
-  warn: { level: 4, color: 'yellow' },
-  error: { level: 5, color: 'red' },
-}
+const BROWSER =
+  typeof process === 'undefined' ||
+  process.type === 'renderer' ||
+  process.browser === true ||
+  process.__nwjs // eslint-disable-line no-underscore-dangle
 
 const LEVELS = {
   ALL: 0,
@@ -28,21 +20,84 @@ const LEVELS = {
   ERROR: 5,
 }
 
+// TODO: add trace level?
+// TODO: auto display objects as JSON / %o template / console.dir method
+const METHODS = {
+  debug: { level: LEVELS.DEBUG, color: 'magenta', icon: '\u{1F527}' },
+  log: { level: LEVELS.LOG, color: 'black', icon: '\u{1F4DC}' },
+  info: { level: LEVELS.INFO, color: 'cyan', icon: '\u{1F50D}' },
+  warn: { level: LEVELS.WARN, color: 'yellow', icon: `\u{26A0}` },
+  error: { level: LEVELS.ERROR, color: 'red', icon: '\u{274C}' },
+}
+
+const BADGES_COLOR = {
+  blue: { bg: '#007bff', fg: 'white' },
+  indigo: { bg: '#6610f2', fg: 'white' },
+  purple: { bg: '#6f42c1', fg: 'white' },
+  pink: { bg: '#e83e8c', fg: 'white' },
+  red: { bg: '#dc3545', fg: 'white' },
+  orange: { bg: '#fd7e14', fg: 'white' },
+  yellow: { bg: '#ffc107', fg: '#212529' },
+  green: { bg: '#28a745', fg: 'white' },
+  teal: { bg: '#20c997', fg: 'white' },
+  cyan: { bg: '#17a2b8', fg: 'white' },
+  gray: { bg: '#6c757d', fg: 'white' },
+  light: { bg: '#f8f9fa', fg: '#212529' },
+  dark: { bg: '#343a40', fg: 'white' },
+}
+
 const DEFAULT_LEVEL = LEVELS.ALL
-const ENABLED = process.env.NODE_ENV === 'development'
+const ENABLED = true
+// const ENABLED = process.env.NODE_ENV === 'development'
 
 const noop = function() {}
 
-function setLoggingMethods(logger, prefix, enabled = true, minLevel = DEFAULT_LEVEL) {
+const getBrowserPrefixStyle = () => {
+  const colorsObjs = Object.values(BADGES_COLOR)
+
+  const badgeColors = colorsObjs[Math.floor(Math.random() * colorsObjs.length)]
+  return (
+    `color: ${badgeColors.fg}; background-color: ${badgeColors.bg}; ` +
+    'padding: 2px 6px; border-radius: 2px; font-size: 10px; margin-right: 5px;'
+  )
+}
+
+const getBrowserArgs = (prefix, prefixStyle, { color, icon }) => {
+  const args = []
+  let format = ''
+  // if (icon) format += `${icon} `
+  const spacer = prefix.length ? ' ' : ''
+  format += `%c${icon}${spacer}${prefix}%c%O`
+  args.push(format, prefixStyle, `color: ${color};`)
+
+  return args
+}
+
+const getNodeArgs = (prefix, { color, icon }) => {
+  const realPrefix = prefix.length > 0 ? `${prefix} - ` : ''
+  return [`${icon} ${style[color].open}${realPrefix}%s${style[color].close}`]
+}
+
+function setLoggingMethods(
+  logger,
+  { prefix = '', enabled = true, level = DEFAULT_LEVEL }
+) {
+  const prefixStyle = getBrowserPrefixStyle()
+
   Object.keys(METHODS).forEach((m) => {
-    const { level, color } = METHODS[m]
+    const methodProps = METHODS[m]
+    const { level: methodLevel } = methodProps
     const methodToBind = console[m] ? m : 'log'
-    const args = browser
-      ? [`%c${prefix}%O`, `color: ${color}`]
-      : [`${style[color].open}${prefix}%O${style[color].close}`]
+
+    const args = BROWSER
+      ? getBrowserArgs(prefix, prefixStyle, methodProps)
+      : getNodeArgs(prefix, methodProps)
 
     // eslint-disable-next-line no-param-reassign
-    logger[m] = enabled && minLevel <= level ? console[methodToBind].bind(console, ...args) : noop
+    logger[m] =
+      enabled && methodLevel >= level
+        ? console[methodToBind].bind(console, ...args)
+        : noop
   })
 }
 
@@ -50,17 +105,13 @@ function setLoggingMethods(logger, prefix, enabled = true, minLevel = DEFAULT_LE
  * Base logger class
  */
 class Logger {
-  constructor(loggerName, enabled = true, level = DEFAULT_LEVEL) {
+  constructor(loggerName = '', enabled = true, level = DEFAULT_LEVEL) {
     this.loggerName = loggerName
     this.enabled = enabled
     this.level = level
-    this.prefix = `[${new Date().toISOString()}] `
+    this.prefix = loggerName
 
-    if (loggerName) {
-      this.prefix += `${loggerName} - `
-    }
-
-    setLoggingMethods(this, this.prefix, enabled, level)
+    setLoggingMethods(this, { prefix: loggerName, enabled, level })
   }
 
   disable() {
@@ -73,13 +124,21 @@ class Logger {
 
   enable() {
     this.enabled = true
-    setLoggingMethods(this, this.prefix, true, this.level)
+    setLoggingMethods(this, {
+      prefix: this.prefix,
+      enabled: true,
+      level: this.level,
+    })
     return this
   }
 
-  setLevel(lvl) {
-    this.level = lvl
-    setLoggingMethods(this, this.prefix, this.enabled, lvl)
+  setLevel(level) {
+    this.level = level
+    setLoggingMethods(this, {
+      prefix: this.prefix,
+      enabled: this.enabled,
+      level,
+    })
     return this
   }
 }
@@ -95,8 +154,11 @@ const Loog = (function Loog() {
     })
   }
 
+  // Expose default logger and constants
   const defaultLogger = new Logger()
-  defaultLogger.levels = LEVELS
+  Object.keys(LEVELS).forEach((lvl) => {
+    defaultLogger[lvl] = LEVELS[lvl]
+  })
   defaultLogger.DEFAULT_LEVEL = DEFAULT_LEVEL
 
   defaultLogger.get = function get(loggerName) {
@@ -104,7 +166,11 @@ const Loog = (function Loog() {
       return this
     }
     if (!Loog.loggers[loggerName]) {
-      Loog.loggers[loggerName] = new Logger(loggerName, Loog.enabled, Loog.level)
+      Loog.loggers[loggerName] = new Logger(
+        loggerName,
+        Loog.enabled,
+        Loog.level
+      )
     }
     return Loog.loggers[loggerName]
   }

@@ -1,7 +1,7 @@
 {
   "name": "@dongwak/loog",
   "description": "Simple logger",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "D.G. Molly",
   "license": "ISC",
   "repository": "git://github.com/dongwak/loog.git",
@@ -19,8 +19,7 @@
     "build": "webpack --mode development",
     "build:prod": "webpack --config webpack.prod.js",
     "build:all": "yarn run build && yarn run build:prod",
-    "show:cjs": "yarn run build && node __tests__/showcase.js",
-    "show:es": "yarn run build && node __tests__/showcase.mjs",
+    "show:term": "node __tests__/showcase.mjs",
     "show:web": "yarn run build && start __tests__/showcase.html",
     "clean": "rimraf dist/*",
     "test": "jest"

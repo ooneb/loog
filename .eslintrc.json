@@ -42,7 +42,7 @@
         }
       }
     ],
-    "max-len": ["warn", { "code": 120 }],
+    "max-len": ["warn", { "code": 80, "comments": 120 }],
     "new-cap": ["warn", { "capIsNew": false }],
     "no-multi-spaces": ["warn", { "ignoreEOLComments": true }]
   }

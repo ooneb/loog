@@ -1,10 +1,19 @@
 /* eslint-disable import/extensions */
-import Loog from '../dist/loog.js'
+import Loog from '../src/loog.mjs'
 
-Loog.debug('debug')
-Loog.log('log')
-Loog.info('info')
-Loog.warn('warn')
-Loog.error('error')
+Loog.debug('default debug')
+Loog.log('default log')
+Loog.info('default info')
+Loog.warn('default warn')
+Loog.error('default error')
+Loog.info(Loog)
 
-Loog.debug(Loog)
+const logger = Loog.get('Showcase')
+logger.debug('debug')
+logger.log('log')
+logger.info('info')
+logger.warn('warn')
+logger.error('error')
+
+Loog.disable()
+Loog.debug("I shouldn't be here")

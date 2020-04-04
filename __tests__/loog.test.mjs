@@ -138,7 +138,7 @@ describe('Loog', () => {
       loggerBefore.log('custom_before_log1')
       Loog.log('default_log1')
 
-      Loog.setLevelAll(Loog.levels.WARN)
+      Loog.setLevelAll(Loog.WARN)
 
       const loggerAfter = Loog.get('SetLevelAllAfterLogger')
 
@@ -211,7 +211,7 @@ describe('Loog', () => {
       const customLogger = Loog.get('SetLevelLogger')
       customLogger.log('custom_log1') // Logged
 
-      customLogger.setLevel(Loog.levels.WARN)
+      customLogger.setLevel(Loog.WARN)
 
       Loog.log('default_log') // Logged
       customLogger.log('custom_log2') // Not logged
