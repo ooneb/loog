@@ -7,13 +7,9 @@ const BUILD_DIR = path.resolve(__dirname, 'dist/')
 const BUILD_FILE = 'loog.min.js'
 
 module.exports = merge(common, {
-  // mode: 'production',
+  mode: 'production',
   output: {
-    path: BUILD_DIR,
     filename: BUILD_FILE,
-    library: 'Loog',
-    libraryTarget: 'window',
-    umdNamedDefine: true,
   },
   devtool: 'source-map',
   optimization: {

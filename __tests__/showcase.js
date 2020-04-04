@@ -1,5 +1,4 @@
-/* eslint-disable import/extensions */
-import Loog from '../dist/loog.js'
+const Loog = require('../dist/loog')
 
 Loog.debug('debug')
 Loog.log('log')

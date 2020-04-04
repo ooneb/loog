@@ -13,8 +13,9 @@ module.exports = {
     filename: BUILD_FILE,
     library: 'Loog',
     libraryExport: 'default',
-    libraryTarget: 'window',
-    // umdNamedDefine: true,
+    libraryTarget: 'umd',
+    umdNamedDefine: true,
+    globalObject: 'this', // Webpack bug for umd build (window is not defined)
   },
 
   devtool: 'eval-source-map',
